@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AccountType, authApi, LoginRsp } from '@/api/services/auth';
+import { AccountType, authApi, LoginRsp } from '@/services/auth';
 import type { RootState } from './index';
 
 const initialState: LoginRsp & { sso: string } = {

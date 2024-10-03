@@ -1,8 +1,9 @@
-import { Middleware, MiddlewareAPI, combineReducers, configureStore, isRejectedWithValue } from '@reduxjs/toolkit';
+import { Middleware, combineReducers, configureStore, isRejectedWithValue } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage/session';
 import { authSlice } from './authSlice';
+import { api } from "@/services";
 
 // const persistFilterTransform = createFilter('auth', ['userinfo', 'token']);
 

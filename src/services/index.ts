@@ -2,14 +2,13 @@ import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-  FetchBaseQueryMeta,
   createApi,
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 import { Mutex } from 'async-mutex';
-import { QueryReturnValue } from 'node_modules/@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { clearToken, setToken } from '@/redux/authSlice';
-import { RootState } from '@/redux';
+import { RootState } from '@/store';
+import { clearToken, setToken } from "@/store/authSlice";
+import { LoginRsp } from "./auth";
 
 // create a new mutex
 const mutex = new Mutex();
@@ -42,24 +41,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryForRefresh = fetchBaseQuery({
-  baseUrl,
-  prepareHeaders: (headers, { getState }) => {
-    const auth = (getState() as RootState)?.auth;
-    const token = auth?.refreshToken;
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
-    }
-    if (import.meta.env.VITE_APIM_KEY) {
-      headers.set('Ocp-Apim-Subscription-Key', import.meta.env.VITE_APIM_KEY);
-    }
-    return headers;
-  },
-  validateStatus: (response, responseBody) => {
-    return response.status === 200 && responseBody?.status === 200;
-  },
-});
-
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
@@ -73,21 +54,24 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
-        const refreshResult = (await baseQueryForRefresh(
-          {
-            url: '/auth/refresh',
-            method: 'POST',
+        const token = (api.getState() as RootState).auth.refreshToken;
+        const refreshResult = await fetchBaseQuery({
+          baseUrl: `${baseUrl}/refresh`,
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Ocp-Apim-Subscription-Key': import.meta.env.VITE_APIM_KEY
           },
-          api,
-          extraOptions,
-        )) as QueryReturnValue<BaseResponse<LoginRsp>, FetchBaseQueryError, FetchBaseQueryMeta>;
-        if (refreshResult.data) {
-          api.dispatch(setToken(refreshResult.data.data));
+          validateStatus: (response, responseBody) => response.status === 200 && responseBody?.status === 200,
+        })(args, api, extraOptions);
+        const refreshData = refreshResult.data as BaseResponse<LoginRsp> | undefined
+        if (refreshData) {
+          api.dispatch(setToken(refreshData.data));
           // retry the initial query
           result = await baseQuery(args, api, extraOptions);
         } else {
           api.dispatch(clearToken());
-          const errorData = refreshResult.error.data as BaseResponse<void>;
+          const errorData = refreshResult?.error?.data as BaseResponse<void>;
           window.location.assign(`/login?${errorData.status}`);
         }
       } finally {
@@ -106,6 +90,5 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['AppList', 'HistList'],
   endpoints: () => ({}),
 });
