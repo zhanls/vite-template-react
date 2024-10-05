@@ -1,20 +1,20 @@
-import React from "react";
+import React from 'react';
 import { Provider } from 'react-redux';
-import ReactDOM from "react-dom/client";
-import { CssBaseline, StyledEngineProvider, ThemeProvider } from "@mui/material";
-import { PersistGate } from "redux-persist/integration/react";
-import { RouterProvider } from "react-router-dom";
-import { persistor, store } from "./store/index.ts";
-import theme from "./theme/index.ts";
-import router from "./pages/index.ts";
+import ReactDOM from 'react-dom/client';
+import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import { PersistGate } from 'redux-persist/integration/react';
+import { RouterProvider } from 'react-router-dom';
+import { persistor, store } from './store/index.ts';
+import theme from './theme/index.ts';
+import router from './pages/index.ts';
 
-import "./index.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+import './index.css';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <Provider store={store}>
@@ -26,5 +26,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </ThemeProvider>
       </Provider>
     </StyledEngineProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

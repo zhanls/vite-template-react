@@ -1,6 +1,6 @@
-import { createTheme } from "@mui/material";
+import { createTheme } from '@mui/material';
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 
 const theme = createTheme({
   components: {

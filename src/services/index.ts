@@ -1,14 +1,8 @@
-import {
-  BaseQueryFn,
-  FetchArgs,
-  FetchBaseQueryError,
-  createApi,
-  fetchBaseQuery,
-} from '@reduxjs/toolkit/query/react';
+import { BaseQueryFn, FetchArgs, FetchBaseQueryError, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Mutex } from 'async-mutex';
 import { RootState } from '@/store';
-import { clearToken, setToken } from "@/store/authSlice";
-import { LoginRsp } from "./auth";
+import { clearToken, setToken } from '@/store/authSlice';
+import { LoginRsp } from './auth';
 
 // create a new mutex
 const mutex = new Mutex();
@@ -59,12 +53,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
           baseUrl: `${baseUrl}/refresh`,
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Ocp-Apim-Subscription-Key': import.meta.env.VITE_APIM_KEY
+            Authorization: `Bearer ${token}`,
+            'Ocp-Apim-Subscription-Key': import.meta.env.VITE_APIM_KEY,
           },
           validateStatus: (response, responseBody) => response.status === 200 && responseBody?.status === 200,
         })(args, api, extraOptions);
-        const refreshData = refreshResult.data as BaseResponse<LoginRsp> | undefined
+        const refreshData = refreshResult.data as BaseResponse<LoginRsp> | undefined;
         if (refreshData) {
           api.dispatch(setToken(refreshData.data));
           // retry the initial query
