@@ -6,7 +6,7 @@ import { LoginRsp } from './auth';
 
 // create a new mutex
 const mutex = new Mutex();
-export const baseUrl = import.meta.env.DEV ? '/api' : import.meta.env.VITE_API_URL;
+export const baseUrl = import.meta.env.VITE_API_URL;
 
 export type BaseResponse<T> = {
   status: number; // 响应编码
