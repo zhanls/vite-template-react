@@ -1,7 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
-import { CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { PersistGate } from 'redux-persist/integration/react';
 import { RouterProvider } from 'react-router-dom';
 import { persistor, store } from './store/index.ts';

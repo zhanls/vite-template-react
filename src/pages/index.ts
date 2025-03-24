@@ -3,11 +3,12 @@ import { createBrowserRouter, RouteObject } from 'react-router-dom';
 const routes: RouteObject[] = [
   {
     id: 'Login Page',
-    path: '/login',
+    path: '/',
     async lazy() {
-      const module = await import('./Login');
+      const module = await import('./Login/index.tsx');
       return module;
     },
+    hydrateFallbackElement: null,
   },
 ];
 
