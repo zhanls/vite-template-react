@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router-dom';
 import { persistor, store } from './store/index.ts';
 import theme from './theme/index.ts';
 import router from './pages/index.ts';
+import './i18n/config.ts';
 
 import './index.css';
 import '@fontsource/roboto/300.css';
