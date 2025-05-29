@@ -5,7 +5,9 @@ export function Component() {
   const { t } = useTranslation('login');
   return (
     <div>
-      <Button variant="outlined">{t('title')}</Button>
+      <Button variant="outlined" className="text-amber-400">
+        {t('title')}
+      </Button>
     </div>
   );
 }
